@@ -33,18 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
-
-      - name: Install stable toolchain
-        run: rustup toolchain add stable --no-self-update && rustup default stable
-      
-      - uses: taiki-e/install-action@cargo-minimal-versions
-      - uses: Swatinem/rust-cache@v2
-      
+        uses: actions/checkout@v3        
       - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check 
+        run: cargo check
 
           
   lints:
