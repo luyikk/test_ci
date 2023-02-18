@@ -47,11 +47,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check 
-          
-      - name: cargo build
-        uses: actions-rs/cargo@v1
-        with: 
-          command: build
+
           
   lints:
     name: Lints
@@ -97,3 +93,20 @@ jobs:
           # it's useful to help catch bugs in upcoming Rust versions.
           - rust: nightly
             os: ubuntu-latest
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v2
+
+    - name: Install ${{ matrix.rust }} toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust }}
+        override: true
+    - uses: Swatinem/rust-cache@v2
+
+    - name: Run cargo build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+
