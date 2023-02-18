@@ -79,7 +79,7 @@ jobs:
           
           
   test_os:
-    name: Tests on ${{ matrix.os }} with Rust ${{ matrix.rust }}
+    name: Build on ${{ matrix.os }} with Rust ${{ matrix.rust }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
