@@ -73,7 +73,6 @@ jobs:
     - name: Install ${{ matrix.rust }} toolchain
       run: rustup toolchain add ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
     - uses: Swatinem/rust-cache@v2
-    - uses: taiki-e/install-action@cargo-minimal-versions
     - name: Run cargo build
-      run: cargo minimal-versions build
+      run: cargo build
 
