@@ -25,58 +25,61 @@ env:
   # from transient network timeouts or other issues.
   CARGO_NET_RETRY: 10
   RUSTUP_MAX_RETRIES: 10
-
+  RUST_BACKTRACE: 1
+  
 jobs:
   check:
     name: Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          
-      - uses: Swatinem/rust-cache@v1
+        uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
       
       - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check 
-          
-      - name: cargo build
-        uses: actions-rs/cargo@v1
-        with: 
-          command: build
+        run: cargo check
+
           
   lints:
     name: Lints
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v1
-
+        uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
+      
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
 
       - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+        run: cargo clippy -- -D warnings
+          
+          
+  test_os:
+    name: Build on ${{ matrix.os }} with Rust ${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        rust: [stable]
+        include:
+          - rust: nightly
+            os: ubuntu-latest
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v3
+
+    - name: Install ${{ matrix.rust }} toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust }}
+        override: true
+    - uses: Swatinem/rust-cache@v2
+
+    - name: Run cargo build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+
