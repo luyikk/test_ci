@@ -15,7 +15,6 @@ jobs:
         with:
           changelog: "CHANGELOG.md"
           branch: main
-          draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
